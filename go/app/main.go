@@ -7,7 +7,6 @@ import (
 	"path"
 	"strings"
 	"encoding/json"
-	"io/ioutil"
 	"crypto/sha256"
 	"encoding/hex"
 	"strconv"
@@ -91,7 +90,7 @@ func getItem(c echo.Context) error {
 
 func loadItemsFromJSON() Items{
 	// Read JSON file
-	data, _ := ioutil.ReadFile("items.json")
+	data, _ := os.ReadFile("items.json")
 
 	// Parse JSON into Items struct
 	var items Items
@@ -103,12 +102,12 @@ func loadItemsFromJSON() Items{
 func saveItemFromJSON(items Items) {
 	// Save data to JSON
 	data, _ := json.Marshal(items)
-	_ = ioutil.WriteFile("items.json", data, 0644)
+	_ = os.WriteFile("items.json", data, 0644)
 }
 
 func calculateImageHash(filePath string) string {
 	// Read image file
-	imageData, _ := ioutil.ReadFile(filePath)
+	imageData, _ := os.ReadFile(filePath)
 
 	// Calculate SHA256 hash
 	hash := sha256.Sum256(imageData)
