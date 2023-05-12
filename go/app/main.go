@@ -155,9 +155,13 @@ func saveItemToDB(item Item) error {
 		log.Fatal(err)
 	}
 	defer db.Close()	
+	// Search categoryID
+	var category_id int
+	row := db.QueryRow("SELECT ROWID FROM category WHERE name == $1", item.Category)
+	err = row.Scan(&category_id)
 	// Insert item to table
-	cmd := "INSERT INTO items (id, name, category, image_name) VALUES ($1, $2, $3, $4)"
-	result, err := db.Exec(cmd, item.ID, item.Name, item.Category, item.Image)
+	cmd := "INSERT INTO items (id, name, category_id, image_name) VALUES ($1, $2, $3, $4)"
+	result, err := db.Exec(cmd, item.ID, item.Name, category_id, item.Image)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -179,9 +183,9 @@ func loadItemsFromDB(keyword string) (Items,error) {
 	}
 	defer db.Close()
 	if keyword == "" {
-		// Load all items 
-		cmd := "SELECT * FROM items WHERE id >= $1"
-		rows, err := db.Query(cmd, 0)	
+		// Load all items
+		cmd := "SELECT items.id, items.name, category.name as category, items.image_name FROM items JOIN category ON items.category_id = category.id"
+		rows, err := db.Query(cmd)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -197,7 +201,7 @@ func loadItemsFromDB(keyword string) (Items,error) {
 		}
 	} else {
 		// Search items by keyword
-		cmd := "SELECT * FROM items WHERE name LIKE '%'||$1||'%'"
+		cmd := "SELECT items.id, items.name, category.name as category, items.image_name FROM items JOIN category ON items.category_id = category.id WHERE items.name LIKE '%'||$1||'%'"
 		rows, err := db.Query(cmd, keyword)
 		if err != nil {
 			log.Fatal(err)
