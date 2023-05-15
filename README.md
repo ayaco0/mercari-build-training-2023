@@ -23,12 +23,12 @@ The following icons indicate pointers for
 
 ## Tasks
 
-- [ ] **STEP1** Git ([JA](document/01-git.ja.md)/[EN](document/01-git.en.md))
-- [ ] **STEP2** Setup environment ([JA](document/02-local-env.ja.md)
+- [x] **STEP1** Git ([JA](document/01-git.ja.md)/[EN](document/01-git.en.md))
+- [x] **STEP2** Setup environment ([JA](document/02-local-env.ja.md)
   /[EN](document/02-local-env.en.md))
-- [ ] **STEP3** Develop API ([JA](document/03-api.ja.md)
+- [x] **STEP3** Develop API ([JA](document/03-api.ja.md)
   /[EN](document/03-api.en.md))
-- [ ] **STEP4** Database ([JA](document/04-database.ja.md)/[EN](document/04-database.en.md))
+- [x] **STEP4** Database ([JA](document/04-database.ja.md)/[EN](document/04-database.en.md))
 - [ ] **STEP5** Docker ([JA](document/05-docker.ja.md)/[EN](document/05-docker.en.md))
 - [ ] **STEP6** Continuous Integration(CI) ([JA](document/06-ci.ja.md)
   /[EN](document/06-ci.en.md))
