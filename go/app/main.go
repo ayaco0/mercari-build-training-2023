@@ -52,10 +52,9 @@ func addItem(c echo.Context) error {
 	newItem.Image = hash
 
 	// Add new item to existing items
-	existingItems, _ := loadItemsFromDB("")
-	count := len(existingItems.Items)+1
-	newItem.ID = count
-	existingItems.Items = append(existingItems.Items, newItem)
+	// existingItems, _ := loadItemsFromDB("")
+	// count := len(existingItems.Items)+1
+	// existingItems.Items = append(existingItems.Items, newItem)
 
 	// Save data to JSON/DB
 	// saveItemToJSON(existingItems)
@@ -160,8 +159,8 @@ func saveItemToDB(item Item) error {
 	row := db.QueryRow("SELECT ROWID FROM category WHERE name == $1", item.Category)
 	err = row.Scan(&category_id)
 	// Insert item to table
-	cmd := "INSERT INTO items (id, name, category_id, image_name) VALUES ($1, $2, $3, $4)"
-	result, err := db.Exec(cmd, item.ID, item.Name, category_id, item.Image)
+	cmd := "INSERT INTO items (name, category_id, image_name) VALUES ($1, $2, $3)"
+	result, err := db.Exec(cmd, item.Name, category_id, item.Image)
 	if err != nil {
 		log.Fatal(err)
 	}
