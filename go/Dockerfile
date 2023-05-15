@@ -13,5 +13,5 @@ WORKDIR /app/go
 RUN go mod download
 
 USER trainee
-
+WORKDIR /app/go/app
 CMD ["go", "run", "main.go"]
