@@ -1,3 +1,4 @@
+# step6-2: Github Actionsを有効にする
 name: build
 run-name: ${{ github.actor }} is building ${{ github.ref_name }} 🚀
 on: [push]
