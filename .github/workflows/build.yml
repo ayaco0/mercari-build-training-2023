@@ -43,7 +43,7 @@ jobs:
       with:
         # contextでdockerのbuildコマンドを使ったディレクトリを指定
         context: .
-        file: Dockerfile
+        file: go/Dockerfile
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
