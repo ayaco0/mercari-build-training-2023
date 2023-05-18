@@ -1,8 +1,17 @@
-FROM alpine
+FROM golang:1.20-alpine
+
+WORKDIR /app
+COPY db db
+COPY go go
+EXPOSE 9000
 
 RUN addgroup -S mercari && adduser -S trainee -G mercari
-# RUN chown -R trainee:mercari /path/to/db
+RUN chown -R trainee:mercari /app/db && chown -R trainee:mercari /app/go/images
+RUN apk add --no-cache git sqlite-dev gcc musl-dev
+
+WORKDIR /app/go
+RUN go mod download
 
 USER trainee
-
-CMD ["go", "version"]
+WORKDIR /app/go
+CMD ["go", "run", "app/main.go"]

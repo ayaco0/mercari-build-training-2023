@@ -1,0 +1,11 @@
+create table items (
+  id integer primary key autoincrement,
+  name text,
+  category_id int,
+  image_name text
+);
+
+create table category (
+  id integer primary key autoincrement,
+  name text
+);

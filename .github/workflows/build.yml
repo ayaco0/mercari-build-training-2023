@@ -1,3 +1,4 @@
+# step6-2: Github Actionsを有効にする
 name: build
 run-name: ${{ github.actor }} is building ${{ github.ref_name }} 🚀
 on: [push]
@@ -37,10 +38,12 @@ jobs:
         echo 'Tag: ${{ steps.meta.outputs.tags }}'
         echo 'Label: ${{ steps.meta.labels.tags }}'
 
-#    - name: Build and push Docker image
-#      uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-#      with:
-#       context: <go or python>
-#       push: true
-#       tags: ${{ steps.meta.outputs.tags }}
-#       labels: ${{ steps.meta.outputs.labels }}
+    - name: Build and push Docker image
+      uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+      with:
+        # contextでdockerのbuildコマンドを使ったディレクトリを指定
+        context: .
+        file: go/Dockerfile
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
