@@ -8,9 +8,9 @@ import (
 	"strings"
 	"encoding/json"
 	"crypto/sha256"
-	"encoding/hex"
 	"strconv"
 	"database/sql"
+	"io"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -48,16 +48,32 @@ func addItem(c echo.Context) error {
 	newItem.Name = c.FormValue("name")
 	newItem.Category = c.FormValue("category")
 	imagePath := c.FormValue("image")
+	image, err := c.FormFile("image")
+	if err != nil {
+		return err
+	}
 	hash, _ := calculateImageHash(imagePath)
 	newItem.Image = hash
 
-	// Add new item to existing items
-	// existingItems, _ := loadItemsFromDB("")
-	// count := len(existingItems.Items)+1
-	// existingItems.Items = append(existingItems.Items, newItem)
+	// Save image
+	dstPath := path.Join(ImgDir, hash)
+	dstFile, err := os.Create(dstPath)
+	if err != nil {
+		return err
+	}
+	defer dstFile.Close()
 
-	// Save data to JSON/DB
-	// saveItemToJSON(existingItems)
+	srcFile, err := image.Open()
+	if err != nil {
+		return err
+	}
+	defer srcFile.Close()
+	// ioはOK？
+	_, err = io.Copy(dstFile, srcFile)
+	if err != nil {
+		return err
+	}
+
 	saveItemToDB(newItem)
 
 	c.Logger().Infof("Receive item: %s", newItem.Name)
@@ -128,7 +144,7 @@ func calculateImageHash(filePath string) (string, error) {
 	hash := sha256.Sum256(imageData)
 
 	// Convert hash to hexadecimal string
-	hashString := hex.EncodeToString(hash[:]) + ".jpeg"
+	hashString := fmt.Sprintf("%x%s", hash, ".jpg")
 
 	return hashString, nil
 }
