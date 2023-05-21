@@ -24,7 +24,7 @@
   color: white;
 }
 
-.ItemList {
+.Item {
   background-color: #222427;
   min-height: 8vh;
   display: flex;

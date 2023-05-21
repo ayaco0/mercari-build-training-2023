@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import "./ItemList.css";
 
 interface Item {
   id: number;
@@ -46,18 +47,20 @@ export const ItemList: React.FC<Prop> = (props) => {
   }, [reload]);
 
   return (
-    <div>
+    <div className='wrapper'>
       {items.map((item) => {
         return (
-          <div key={item.id} className='ItemList'>
-            {/* TODO: Task 1: Replace the placeholder image with the item image */}
-            {/* <img src={placeholderImage} /> */}
-            <img src={`${server}/image/${item.image_filename}`} />
-            <p>
-              <span>Name: {item.name}</span>
-              <br />
-              <span>Category: {item.category}</span>
-            </p>
+          <div>
+            <div key={item.id} className='ItemList'>
+              {/* TODO: Task 1: Replace the placeholder image with the item image */}
+              {/* <img src={placeholderImage} /> */}
+              <img className='image' src={`${server}/image/${item.image_filename}`} />
+              <p>
+                <span>Name: {item.name}</span>
+                <br />
+                <span>Category: {item.category}</span>
+              </p>
+            </div>
           </div>
         )
       })}
