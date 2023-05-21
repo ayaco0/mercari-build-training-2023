@@ -177,12 +177,25 @@ func saveItemToDB(item Item) error {
 	}
 	defer db.Close()	
 	// Search categoryID
-	var category_id int
-	row := db.QueryRow("SELECT ROWID FROM category WHERE name == $1", item.Category)
-	err = row.Scan(&category_id)
+	var categoryID int64
+	row := db.QueryRow("SELECT ROWID FROM category WHERE name = $1", item.Category)
+	err = row.Scan(&categoryID)
+	if err != nil {
+		// If no matching category found, insert a new category
+		result, err := db.Exec("INSERT INTO category (name) VALUES ($1)", item.Category)
+		if err != nil {
+			log.Fatal(err)
+		}
+		categoryID, err = result.LastInsertId()
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("LastInsertId: %d\n", categoryID)
+	}
+
 	// Insert item to table
 	cmd := "INSERT INTO items (name, category_id, image_name) VALUES ($1, $2, $3)"
-	result, err := db.Exec(cmd, item.Name, category_id, item.Image)
+	result, err := db.Exec(cmd, item.Name, categoryID, item.Image)
 	if err != nil {
 		log.Fatal(err)
 	}
