@@ -48,22 +48,24 @@ export const ItemList: React.FC<Prop> = (props) => {
 
   return (
     <div className='wrapper'>
-      {items.map((item) => {
-        return (
-          <div>
-            <div key={item.id} className='ItemList'>
-              {/* TODO: Task 1: Replace the placeholder image with the item image */}
-              {/* <img src={placeholderImage} /> */}
+      {items.length > 0 ? (
+        items.map((item) => (
+          <div key={item.id} className='ItemList'>
+            {item.image_filename ? (
               <img className='image' src={`${server}/image/${item.image_filename}`} />
-              <p>
-                <span>Name: {item.name}</span>
-                <br />
-                <span>Category: {item.category}</span>
-              </p>
-            </div>
+            ) : (
+              <img className='image' src={placeholderImage} />
+            )}
+            <p>
+              <span>Name: {item.name}</span>
+              <br />
+              <span>Category: {item.category}</span>
+            </p>
           </div>
-        )
-      })}
+        ))
+      ) : (
+        <p>No items found.</p>
+      )}
     </div>
   )
 };
