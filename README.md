@@ -34,7 +34,7 @@ The following icons indicate pointers for
   /[EN](document/06-ci.en.md))
 - [x] **STEP7** (Stretch) Frontend ([JA](document/07-frontend.ja.md)
   /[EN](document/07-frontend.en.md))
-- [ ] **STEP8** (Stretch)  Run on docker-compose ([JA](document/08-docker-compose.ja.md)
+- [x] **STEP8** (Stretch)  Run on docker-compose ([JA](document/08-docker-compose.ja.md)
   /[EN](document/08-docker-compose.en.md))
 
 ### Other documents
