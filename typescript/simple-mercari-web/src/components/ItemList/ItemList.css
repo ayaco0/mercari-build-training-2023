@@ -5,6 +5,7 @@
     row-gap: 10px;
     justify-items: center;
     align-items: center;
+    margin: 20px;
 }
 .image {
 	width: 300px;
