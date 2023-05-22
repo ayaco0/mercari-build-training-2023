@@ -33,8 +33,6 @@
   justify-content: left;
   font-size: calc(10px + 1vmin);
   color: black;
-  box-shadow: 0 10px 25px 0 rgba(0, 0, 0, .5);
-  margin-top: 10px;
 }
 
 .App-link {
