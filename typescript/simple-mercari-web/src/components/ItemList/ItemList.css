@@ -1,0 +1,14 @@
+.wrapper {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+    column-gap: 10px;
+    row-gap: 10px;
+    justify-items: center;
+    align-items: center;
+    margin: 20px;
+}
+.image {
+	width: 300px;
+	height: 300px;
+	object-fit:cover;
+}

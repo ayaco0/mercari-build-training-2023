@@ -8,9 +8,9 @@ import (
 	"strings"
 	"encoding/json"
 	"crypto/sha256"
-	"encoding/hex"
 	"strconv"
 	"database/sql"
+	"io"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -47,17 +47,45 @@ func addItem(c echo.Context) error {
 	var newItem Item
 	newItem.Name = c.FormValue("name")
 	newItem.Category = c.FormValue("category")
-	imagePath := c.FormValue("image")
-	hash, _ := calculateImageHash(imagePath)
+	imagePath, err := c.FormFile("image")
+	if err != nil {
+		return err
+	}
+
+	// Open imageFile
+	imageFile, err := imagePath.Open()
+	if err != nil {
+		return err
+	}
+	defer imageFile.Close()
+
+	// Read imageFile data
+	imageData, err := io.ReadAll(imageFile)
+	if err != nil {
+		return err
+	}
+
+	// Calculate SHA256 hash and Covert to string
+	hash := fmt.Sprintf("%x%s", sha256.Sum256(imageData), ".jpg")
 	newItem.Image = hash
 
-	// Add new item to existing items
-	// existingItems, _ := loadItemsFromDB("")
-	// count := len(existingItems.Items)+1
-	// existingItems.Items = append(existingItems.Items, newItem)
+	// Save image to dstPath
+	dstPath := path.Join(ImgDir, hash)
+	dstFile, err := os.Create(dstPath)
+	if err != nil {
+		return err
+	}
+	defer dstFile.Close()
+	srcFile, err := imagePath.Open()
+	if err != nil {
+		return err
+	}
+	defer srcFile.Close()
+	_, err = io.Copy(dstFile, srcFile)
+	if err != nil {
+		return err
+	}
 
-	// Save data to JSON/DB
-	// saveItemToJSON(existingItems)
 	saveItemToDB(newItem)
 
 	c.Logger().Infof("Receive item: %s", newItem.Name)
@@ -83,9 +111,10 @@ func getImg(c echo.Context) error {
 }
 
 func getItem(c echo.Context) error {
-	// Load JSON/DB
-	// items, _ := loadItemsFromJSON()
-	items, _ := loadItemsFromDB("")
+	items, err := loadItemsFromDB("")
+	if err != nil {
+		return err
+	}
 	c.Logger().Infof("Get items")
 
 	return c.JSON(http.StatusOK, items)
@@ -120,23 +149,16 @@ func saveItemToJSON(items Items) error {
 	return nil
 }
 
-func calculateImageHash(filePath string) (string, error) {
-	// Read image file
-	imageData, _ := os.ReadFile(filePath)
-
-	// Calculate SHA256 hash
-	hash := sha256.Sum256(imageData)
-
-	// Convert hash to hexadecimal string
-	hashString := hex.EncodeToString(hash[:]) + ".jpeg"
-
-	return hashString, nil
-}
-
 func getItemByID(c echo.Context) error {
 	targetStr := c.Param("id")
-	targetID, _ := strconv.Atoi(targetStr)
-	items, _ := loadItemsFromDB("")
+	targetID, err := strconv.Atoi(targetStr)
+	if err != nil {
+		return err
+	}
+	items, err := loadItemsFromDB("")
+	if err != nil {
+		return err
+	}
 
 	for _, item := range items.Items {
 		if item.ID == targetID {
